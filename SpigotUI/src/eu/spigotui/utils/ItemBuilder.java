@@ -21,8 +21,8 @@ public class ItemBuilder {
 		this.material = material;
 	}
 	
-	public ItemBuilder setDamage(Byte damage) {
-		this.damage = damage;
+	public ItemBuilder setDamage(int damage) {
+		this.damage = (byte)damage;
 		return this;
 	}
 	

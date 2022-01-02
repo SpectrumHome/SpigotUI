@@ -21,25 +21,37 @@ public class UIButton extends UIComponent {
 		this.name = name;
 	}
 
-	public String getName() {
-		return name;
-	}
-	
 	public UIButton(ItemStack stack, int width, int height, String name) {
 		super(new Dimension(width, height));
 		this.stack = stack;
 		this.name = name;
+	}
+	
+	public UIButton(ItemStack stack,String name,ValueRunnable<ClickAction> onClick) {
+		this.stack = stack;
+		this.name = name;
+		this.onClick = onClick;
+	}
+
+	public UIButton(ItemStack stack, int width, int height, String name,ValueRunnable<ClickAction> onClick) {
+		super(new Dimension(width, height));
+		this.stack = stack;
+		this.name = name;
+		this.onClick = onClick;
 	}
 
 	@Override
 	public boolean onClick(int x, int y, ClickAction type) {
 		if (this.onClick != null)
 			onClick.run(type);
-		ui.getPlayer().sendMessage("kekkkkkk");
 		return true;
 		
 	}
 
+	public String getName() {
+		return name;
+	}
+	
 	@Override
 	public ItemStack getStack(int relX, int relY) {
 		return stack;
