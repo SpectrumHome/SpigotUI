@@ -5,13 +5,12 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import eu.spigotui.ui.SpigotUI;
 import eu.spigotui.ui.UIHandler;
 import eu.spigotui.ui.components.UIButton;
+import eu.spigotui.ui.top.TextFieldInventory;
 import eu.spigotui.utils.ItemBuilder;
 import eu.spigotui.utils.UISection;
 
@@ -32,11 +31,15 @@ public class Main extends JavaPlugin {
 		public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 			if(sender instanceof Player) {
 				Player p = (Player) sender;
-				SpigotUI ui = new SpigotUI(p,InventoryType.valueOf(args[0]),"Test");
+				SpigotUI ui = new SpigotUI(p,"Test");
+				TextFieldInventory field = new TextFieldInventory("Rename me senpai");
+				ui.setActiveInventory(field);
+				
 				ui.setActionOnClose(()->System.out.println("closed"));
-				ui.addComponent(UISection.TOP,0, 0, new UIButton(new ItemBuilder(Material.DIAMOND_SWORD).setLore("lenni", "du", "kek").enchantEffect().build(),"NUDEL"));
-				ui.addComponent(UISection.TOP,1, 0, new UIButton(new ItemStack(Material.WOOL),"wuhl"));
-				ui.addComponent(UISection.BOTTOM,0, 0, new UIButton(new ItemStack(Material.APPLE),"eppel"));
+				
+				ui.addComponent(UISection.BOTTOM,0, 0, new UIButton(new ItemBuilder(Material.WOOL).build(),"§aPrint value").setOnClick((action) -> {
+					p.sendMessage(field.getValue());
+				}));
 				ui.openInventory();
 			}
 			return false;

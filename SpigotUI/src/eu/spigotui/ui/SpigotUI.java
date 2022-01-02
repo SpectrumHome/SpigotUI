@@ -6,65 +6,56 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 
 import eu.spigotui.listener.UIListener;
-import eu.spigotui.ui.components.UIButton;
+import eu.spigotui.ui.top.SizedActiveInventory;
+import eu.spigotui.ui.top.categories.ActiveInventory;
 import eu.spigotui.utils.UISection;
 import net.minecraft.server.v1_8_R3.BlockPosition;
-import net.minecraft.server.v1_8_R3.ChatMessage;
 import net.minecraft.server.v1_8_R3.ContainerAnvil;
 import net.minecraft.server.v1_8_R3.EntityHuman;
-import net.minecraft.server.v1_8_R3.EntityPlayer;
-import net.minecraft.server.v1_8_R3.PacketPlayOutOpenWindow;
 
 public class SpigotUI {
 
-	HashMap<UIComponent, Point> topComponents = new HashMap<>();
+	public static final int size = 3;
+	
+	ActiveInventory activeInventory;
 	HashMap<UIComponent, Point> bottomComponents = new HashMap<>();
 
 	Runnable onClose;
 
-	InventoryType type;
-	int height = 3;
 	Player p;
 	String name;
 
-	public SpigotUI(Player p, InventoryType type) {
-		this.p = p;
-		this.type = type;
-	}
-
-	public SpigotUI(Player p, int height) {
-		this.height = height;
-		this.p = p;
-	}
-
 	public SpigotUI(Player p) {
 		this.p = p;
+		this.activeInventory = new SizedActiveInventory(this,size);
 	}
-
-	public SpigotUI(Player p, InventoryType type, String name) {
-		this.p = p;
-		this.type = type;
-		this.name = name;
-	}
-
-	public SpigotUI(Player p, int height, String name) {
-		this.height = height;
-		this.p = p;
-		this.name = name;
-	}
-
+	
 	public SpigotUI(Player p, String name) {
 		this.p = p;
 		this.name = name;
+		this.activeInventory = new SizedActiveInventory(this,size);
+	}
+	
+	public SpigotUI(Player p,ActiveInventory acInv) {
+		this.p = p;
+		setActiveInventory(acInv);
 	}
 
+	public SpigotUI(Player p, ActiveInventory acInv, String name) {
+		this.p = p;
+		this.name = name;
+		setActiveInventory(acInv);
+	}
+
+	public void setActiveInventory(ActiveInventory activeInventory) {
+		activeInventory.setUi(this);
+		this.activeInventory = activeInventory;
+	}
+	
 	public Player getPlayer() {
 		return p;
 	}
@@ -75,7 +66,7 @@ public class SpigotUI {
 
 	public void addComponent(UISection section, Point pos, UIComponent comp) {
 		if (section == UISection.TOP) {
-			this.topComponents.put(comp, pos);
+			this.activeInventory.addComponent(pos, comp);
 		} else {
 			this.bottomComponents.put(comp, pos);
 		}
@@ -95,25 +86,20 @@ public class SpigotUI {
 
 			absX = slot % 9;
 			absY = (int) Math.floor(slot / 9);
-
 		}
 
-		System.out.println(section.toString());
-
-		HashMap<UIComponent, Point> map = section == UISection.BOTTOM ? bottomComponents : topComponents;
+		HashMap<UIComponent, Point> map = section == UISection.BOTTOM ? bottomComponents
+				: activeInventory.getComponents();
 
 		List<UIComponent> keys = new ArrayList<>(map.keySet());
 		Collections.reverse(keys);
 
 		for (UIComponent key : keys) {
-			UIButton comp = (UIButton) key;
-			System.out.println(comp.getName());
 			Point location = map.get(key);
 			boolean hit = location.x >= absX && location.x < absX + key.size.width && location.y >= absY
 					&& location.y < absY + key.size.height;
 			if (hit) {
-				key.onClick(absX - location.x, absY - location.y, action);
-				break;
+				return key.onClick(absX - location.x, absY - location.y, action);
 			}
 		}
 
@@ -135,7 +121,7 @@ public class SpigotUI {
 	}
 
 	public void openInventory() {
-		openTopInventory();
+		activeInventory.openInventory();
 		openBottomInventory();
 		UIListener.currentUIs.add(this);
 	}
@@ -151,66 +137,6 @@ public class SpigotUI {
 		if (p.getOpenInventory() != null)
 			return p.getOpenInventory().getBottomInventory();
 		return null;
-	}
-
-	public Inventory getTopInv() {
-		return topInv;
-	}
-
-	Inventory topInv;
-
-	public void openTopInventory() {
-		if (topInv != null)
-			return;
-		boolean packet = false;
-
-		if (type != null) {
-			switch (type) {
-			case CRAFTING:
-			case CREATIVE:
-			case ENCHANTING:
-			case MERCHANT:
-				this.type = null;
-				openTopInventory();
-				return;
-			case DROPPER:
-				this.type = InventoryType.DISPENSER;
-				openTopInventory();
-				return;
-			case ANVIL: {
-				packet = true;
-				EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
-				FakeAnvil fakeAnvil = new FakeAnvil(entityPlayer);
-				int containerId = entityPlayer.nextContainerCounter();
-
-				((CraftPlayer) p).getHandle().playerConnection.sendPacket(new PacketPlayOutOpenWindow(containerId,
-						"minecraft:anvil", new ChatMessage("", new Object[] {}), 0));
-
-				entityPlayer.activeContainer = fakeAnvil;
-				entityPlayer.activeContainer.windowId = containerId;
-				entityPlayer.activeContainer.addSlotListener(entityPlayer);
-				entityPlayer.activeContainer = fakeAnvil;
-				entityPlayer.activeContainer.windowId = containerId;
-				topInv = fakeAnvil.getBukkitView().getTopInventory();
-				break;
-			}
-			default:
-				if (this.name == null)
-					topInv = Bukkit.createInventory(p, type);
-				else
-					topInv = Bukkit.createInventory(p, type, this.name);
-				break;
-			}
-		} else {
-			if (this.name == null)
-				topInv = Bukkit.createInventory(p, height * 9);
-			else
-				topInv = Bukkit.createInventory(p, height * 9, this.name);
-		}
-
-		setSectionItems(topComponents, topInv, -1);
-		if (!packet)
-			p.openInventory(topInv);
 	}
 
 	public void setSectionItems(HashMap<UIComponent, Point> components, Inventory sectionInv, int offset) {
@@ -229,10 +155,6 @@ public class SpigotUI {
 				}
 			}
 		});
-	}
-
-	public InventoryType getType() {
-		return type;
 	}
 
 	public static final class FakeAnvil extends ContainerAnvil {
