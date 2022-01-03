@@ -1,10 +1,12 @@
-package eu.spigotui.ui.top.categories;
+package eu.spigotui.ui.active.categories;
 
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.inventory.Inventory;
 
-import eu.spigotui.ui.SpigotUI.FakeAnvil;
+import net.minecraft.server.v1_8_R3.BlockPosition;
 import net.minecraft.server.v1_8_R3.ChatMessage;
+import net.minecraft.server.v1_8_R3.ContainerAnvil;
+import net.minecraft.server.v1_8_R3.EntityHuman;
 import net.minecraft.server.v1_8_R3.EntityPlayer;
 import net.minecraft.server.v1_8_R3.PacketPlayOutOpenWindow;
 
@@ -25,6 +27,18 @@ public abstract class AnvilInventory extends ActiveInventory {
 		entityPlayer.activeContainer = fakeAnvil;
 		entityPlayer.activeContainer.windowId = containerId;
 		return fakeAnvil.getBukkitView().getTopInventory();
+	}
+	
+	public static final class FakeAnvil extends ContainerAnvil {
+
+		public FakeAnvil(EntityHuman entityHuman) {
+			super(entityHuman.inventory, entityHuman.world, new BlockPosition(0, 0, 0), entityHuman);
+		}
+
+		@Override
+		public boolean a(EntityHuman entityHuman) {
+			return true;
+		}
 	}
 
 }

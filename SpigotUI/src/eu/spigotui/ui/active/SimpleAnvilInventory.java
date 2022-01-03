@@ -1,6 +1,6 @@
-package eu.spigotui.ui.top;
+package eu.spigotui.ui.active;
 
-import eu.spigotui.ui.top.categories.AnvilInventory;
+import eu.spigotui.ui.active.categories.AnvilInventory;
 
 public class SimpleAnvilInventory extends AnvilInventory {
 
@@ -8,5 +8,6 @@ public class SimpleAnvilInventory extends AnvilInventory {
 
 	@Override
 	public void initComponents() {}
+
 
 }

@@ -9,8 +9,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import eu.spigotui.ui.SpigotUI;
 import eu.spigotui.ui.UIHandler;
+import eu.spigotui.ui.active.TextFieldInventory;
 import eu.spigotui.ui.components.UIButton;
-import eu.spigotui.ui.top.TextFieldInventory;
 import eu.spigotui.utils.ItemBuilder;
 import eu.spigotui.utils.UISection;
 
@@ -37,7 +37,7 @@ public class Main extends JavaPlugin {
 				
 				ui.setActionOnClose(()->System.out.println("closed"));
 				
-				ui.addComponent(UISection.BOTTOM,0, 0, new UIButton(new ItemBuilder(Material.WOOL).build(),"§aPrint value").setOnClick((action) -> {
+				ui.addComponent(UISection.BOTTOM,0, 0, new UIButton(new ItemBuilder(Material.WOOL).build()).setOnClick((action) -> {
 					p.sendMessage(field.getValue());
 				}));
 				ui.openInventory();

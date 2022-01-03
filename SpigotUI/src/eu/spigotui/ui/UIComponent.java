@@ -4,8 +4,11 @@ import java.awt.Dimension;
 
 import org.bukkit.inventory.ItemStack;
 
+import eu.spigotui.ui.utils.ClickAction;
+
 public abstract class UIComponent {
 	
+	@Deprecated
 	public SpigotUI ui;
 	
 	Dimension size = new Dimension(1, 1);
@@ -18,6 +21,10 @@ public abstract class UIComponent {
 	
 	public void setUI(SpigotUI ui) {
 		this.ui = ui;
+	}
+	
+	public Dimension getSize() {
+		return size;
 	}
 	
 	public abstract boolean onClick(int relX, int relY, ClickAction type);

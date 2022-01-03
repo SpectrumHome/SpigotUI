@@ -4,8 +4,8 @@ import java.awt.Dimension;
 
 import org.bukkit.inventory.ItemStack;
 
-import eu.spigotui.ui.ClickAction;
 import eu.spigotui.ui.UIComponent;
+import eu.spigotui.ui.utils.ClickAction;
 import eu.spigotui.utils.ValueRunnable;
 
 public class UIButton extends UIComponent {
@@ -14,29 +14,23 @@ public class UIButton extends UIComponent {
 
 	ValueRunnable<ClickAction> onClick;
 
-	String name;
-	
-	public UIButton(ItemStack stack,String name) {
+	public UIButton(ItemStack stack) {
 		this.stack = stack;
-		this.name = name;
 	}
 
-	public UIButton(ItemStack stack, int width, int height, String name) {
+	public UIButton(ItemStack stack, int width, int height) {
 		super(new Dimension(width, height));
 		this.stack = stack;
-		this.name = name;
 	}
 	
-	public UIButton(ItemStack stack,String name,ValueRunnable<ClickAction> onClick) {
+	public UIButton(ItemStack stack,ValueRunnable<ClickAction> onClick) {
 		this.stack = stack;
-		this.name = name;
 		this.onClick = onClick;
 	}
 
-	public UIButton(ItemStack stack, int width, int height, String name,ValueRunnable<ClickAction> onClick) {
+	public UIButton(ItemStack stack, int width, int height, ValueRunnable<ClickAction> onClick) {
 		super(new Dimension(width, height));
 		this.stack = stack;
-		this.name = name;
 		this.onClick = onClick;
 	}
 
@@ -48,10 +42,6 @@ public class UIButton extends UIComponent {
 		
 	}
 
-	public String getName() {
-		return name;
-	}
-	
 	@Override
 	public ItemStack getStack(int relX, int relY) {
 		return stack;
