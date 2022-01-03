@@ -4,16 +4,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.Material;
+import org.bukkit.SkullType;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
+
+import eu.spectrum.main.Main;
 
 public class ItemBuilder {
 	
 	Material material;
-	Byte damage;
+	Integer damage;
 	String name;
 	String[] lore;
+	String owner;
+	int itemCount = 1;
 
 	HashMap<Enchantment,Integer> enchants = new HashMap<>();
 	
@@ -21,8 +27,20 @@ public class ItemBuilder {
 		this.material = material;
 	}
 	
+	public ItemBuilder setItemCount(int count) {
+		this.itemCount = count;
+		return this;
+	}
+	
+	public ItemBuilder setOwner(String owner) {
+		this.owner = owner;
+		this.material = Material.SKULL_ITEM;
+		this.damage = SkullType.PLAYER.ordinal();
+		return this;
+	}
+	
 	public ItemBuilder setDamage(int damage) {
-		this.damage = (byte)damage;
+		this.damage = damage;
 		return this;
 	}
 	
@@ -47,7 +65,7 @@ public class ItemBuilder {
 	}
 	
 	public ItemStack build() {
-		ItemStack item = new ItemStack(material);
+		ItemStack item = new ItemStack(material,itemCount);
 		ItemMeta meta = item.getItemMeta();
 		for(Enchantment ench : enchants.keySet()) {
 			int level = enchants.get(ench);
@@ -60,15 +78,26 @@ public class ItemBuilder {
 		if(name != null)
 			meta.setDisplayName(name);
 		if(damage != null)
-			item.setDurability(damage);
+			item.setDurability(damage.byteValue());
 		if(lore != null) {
 			ArrayList<String> lore = new ArrayList<String>();
 			for(String s : this.lore)
 				lore.add(s);
 			meta.setLore(lore);
 		}
+		if(owner!=null && meta instanceof SkullMeta) {
+			((SkullMeta)meta).setOwner(owner);
+		}
 		item.setItemMeta(meta);
 		return item;
+	}
+	
+	public static ItemStack paneFiller(byte color, String name) {
+		ItemStack pane = new ItemStack(Material.STAINED_GLASS_PANE, 1, (byte) color);
+		ItemMeta meta = pane.getItemMeta();
+		meta.setDisplayName(name);
+		pane.setItemMeta(meta);
+		return pane;
 	}
 
 }
