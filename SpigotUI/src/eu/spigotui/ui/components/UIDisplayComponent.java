@@ -4,8 +4,8 @@ import java.awt.Dimension;
 
 import org.bukkit.inventory.ItemStack;
 
-import eu.spigotui.ui.ClickAction;
 import eu.spigotui.ui.UIComponent;
+import eu.spigotui.ui.utils.ClickAction;
 
 public class UIDisplayComponent extends UIComponent {
 

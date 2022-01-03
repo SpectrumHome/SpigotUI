@@ -1,11 +1,11 @@
-package eu.spigotui.ui.top;
+package eu.spigotui.ui.active;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 
 import eu.spigotui.ui.SpigotUI;
-import eu.spigotui.ui.top.categories.ActiveInventory;
+import eu.spigotui.ui.active.categories.ActiveInventory;
 
 public class TypedActiveInventory extends ActiveInventory {
 

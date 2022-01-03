@@ -1,4 +1,4 @@
-package eu.spigotui.listener;
+package eu.spigotui.ui;
 
 import java.util.ArrayList;
 
@@ -8,8 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 
-import eu.spigotui.ui.ClickAction;
-import eu.spigotui.ui.SpigotUI;
+import eu.spigotui.ui.utils.ClickAction;
 import eu.spigotui.utils.UISection;
 
 public class UIListener implements Listener {
@@ -20,7 +19,7 @@ public class UIListener implements Listener {
 		HumanEntity p = e.getPlayer();
 		SpigotUI ui;
 		if ((ui = getUIByPlayer(p)) != null)
-			ui.close();
+			ui.onClose();
 
 	}
 
@@ -29,7 +28,7 @@ public class UIListener implements Listener {
 		HumanEntity p = e.getWhoClicked();
 		SpigotUI ui;
 		if ((ui = getUIByPlayer(p)) != null) {
-			UISection section = e.getClickedInventory()==ui.getBottomInv() ? UISection.BOTTOM : UISection.TOP;
+			UISection section = e.getClickedInventory()==ui.getInventory() ? UISection.BOTTOM : UISection.TOP;
 			int slot = e.getSlot();
 			e.setCancelled(ui.onClicked(slot % 9, (int) Math.floor(slot / 9), section,
 					ClickAction.getFromStates(e.isLeftClick(), e.isRightClick(), e.isShiftClick())));

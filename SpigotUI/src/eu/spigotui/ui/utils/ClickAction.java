@@ -1,4 +1,4 @@
-package eu.spigotui.ui;
+package eu.spigotui.ui.utils;
 
 public enum ClickAction {
 	LEFT, LEFT_SHIFT, RIGHT, RIGHT_SHIFT;
