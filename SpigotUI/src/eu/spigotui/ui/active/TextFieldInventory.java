@@ -42,7 +42,7 @@ public class TextFieldInventory extends AnvilInventory {
 	}
 	
 	public boolean valueChanged() {
-		return defValue.equals(lastValue);
+		return !defValue.equals(lastValue);
 	}
 
 	public void displayError(String message) {
