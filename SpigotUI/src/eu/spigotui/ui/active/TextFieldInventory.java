@@ -29,7 +29,7 @@ public class TextFieldInventory extends AnvilInventory {
 
 	@Override
 	public void initComponents() {
-		addComponent(new Point(0, 0), new UIDisplayComponent(new ItemBuilder(Material.PAPER).setName(defValue).build()));
+		addComponent( new UIDisplayComponent(new ItemBuilder(Material.PAPER).setName(defValue).build()));
 	}
 
 	public String getValue() {
@@ -47,7 +47,7 @@ public class TextFieldInventory extends AnvilInventory {
 
 	public void displayError(String message) {
 		getInventory().setItem(9,
-				new ItemBuilder(Material.STAINED_GLASS_PANE).setName("§c" + message).setDamage(14).build());
+				new ItemBuilder(Material.STAINED_GLASS_PANE).setName("ï¿½c" + message).setDamage(14).build());
 		getPlayer().updateInventory();
 	}
 

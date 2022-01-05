@@ -1,10 +1,8 @@
 package eu.spigotui.ui;
 
+import java.awt.Dimension;
 import java.awt.Point;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map.Entry;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -15,7 +13,7 @@ import eu.spigotui.ui.utils.ClickAction;
 import eu.spigotui.ui.utils.Componentable;
 import eu.spigotui.utils.UISection;
 
-public class SpigotUI extends Componentable {
+public abstract class SpigotUI extends Componentable {
 
 	public static final int size = 3;
 
@@ -30,6 +28,7 @@ public class SpigotUI extends Componentable {
 		super(p, 9);
 		this.p = p;
 		this.activeInventory = new SizedActiveInventory(this, size);
+		initComponents();
 	}
 
 	public SpigotUI(Player p, String name) {
@@ -37,12 +36,14 @@ public class SpigotUI extends Componentable {
 		this.p = p;
 		this.name = name;
 		this.activeInventory = new SizedActiveInventory(this, size);
+		initComponents();
 	}
 
 	public SpigotUI(Player p, ActiveInventory acInv) {
 		super(p, 9);
 		this.p = p;
 		setActiveInventory(acInv);
+		initComponents();
 	}
 
 	public SpigotUI(Player p, ActiveInventory acInv, String name) {
@@ -50,6 +51,7 @@ public class SpigotUI extends Componentable {
 		this.p = p;
 		this.name = name;
 		setActiveInventory(acInv);
+		initComponents();
 	}
 
 	public void setActiveInventory(ActiveInventory activeInventory) {
@@ -61,41 +63,20 @@ public class SpigotUI extends Componentable {
 		return p;
 	}
 
-	public void addComponent(UISection section, int x, int y, UIComponent comp) {
-		addComponent(section, new Point(x, y), comp);
-	}
-
-	public void addComponent(UISection section, Point pos, UIComponent comp) {
+	public void addComponent(UISection section, UIComponent comp) {
 		if (section == UISection.TOP) {
-			this.activeInventory.addComponent(pos, comp);
+			this.activeInventory.addComponent(comp);
 		} else {
-			this.addComponent(pos, comp);
+			this.addComponent(comp);
 		}
-		comp.setUI(this);
-	}
-	
-	public void insertComponent(int listPos, UISection section, int x, int y, UIComponent comp) {
-		insertComponent(listPos, section, new Point(x, y), comp);
 	}
 
-	public void insertComponent(int listPos, UISection section, Point pos, UIComponent comp) {
-		if (section == UISection.TOP) {
-			this.activeInventory.insertComponent(listPos, pos, comp);
-		} else {
-			this.insertComponent(listPos, pos, comp);
-		}
-		comp.setUI(this);
+	public boolean removeComponent(UIComponent comp) {
+		return activeInventory.removeComponent(comp) ? true : super.removeComponent(comp);
 	}
 
-	public int removeComponent(UIComponent comp) {
-		int pos = -1;
-		if((pos = activeInventory.removeComponent(comp)) > -1)
-			return pos;
-		return super.removeComponent(comp);
-	}
+	// TODO: replaceComponent
 
-	//TODO: replaceComponent
-	
 	public boolean onClicked(int rawX, int rawY, UISection section, ClickAction action) {
 
 		int absX = rawX;
@@ -111,18 +92,15 @@ public class SpigotUI extends Componentable {
 			absY = (int) Math.floor(slot / 9);
 		}
 
-		List<Entry<UIComponent, Point>> map = new ArrayList<>(section == UISection.BOTTOM ? getComponents()
-				: activeInventory.getComponents());
-		
-		//List<UIComponent> keys = new ArrayList<>(map.keySet());
-		
-		Collections.reverse(map);
+		List<UIComponent> map = section == UISection.BOTTOM ? getComponents() : activeInventory.getComponents();
 
-		for (Entry<UIComponent, Point> e : map) {
-			UIComponent key = e.getKey();
-			Point location = e.getValue();
-			boolean hit = location.x >= absX && location.x < absX + key.size.width && location.y >= absY
-					&& location.y < absY + key.size.height;
+		// List<UIComponent> keys = new ArrayList<>(map.keySet());
+
+		for (UIComponent key : map) {
+			Point location = key.getPos();
+			Dimension size = key.getSize();
+			boolean hit = location.x >= absX && location.x < absX + size.width && location.y >= absY
+					&& location.y < absY + size.height;
 			if (hit) {
 				return key.onClick(absX - location.x, absY - location.y, action);
 			}
@@ -165,13 +143,15 @@ public class SpigotUI extends Componentable {
 		activeInventory.repaint();
 		super.repaint();
 	}
-	
+
 	public void repaintTop() {
 		activeInventory.repaint();
 	}
-	
+
 	public void repaintBottom() {
 		super.repaint();
 	}
+	
+	public abstract void initComponents();
 
 }

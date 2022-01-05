@@ -29,5 +29,9 @@ public class UIDisplayComponent extends UIComponent {
 	public ItemStack getStack(int relX, int relY) {
 		return stack;
 	}
+	
+	public void setStack(ItemStack stack) {
+		this.stack = stack;
+	}
 
 }

@@ -3,7 +3,3 @@ name: SpigotUI
 version: v1.0
 author: Spectrum
 description: SpigotUI helps creating UIs.
-
-commands:
-   uitest:
-      description: Test lol
