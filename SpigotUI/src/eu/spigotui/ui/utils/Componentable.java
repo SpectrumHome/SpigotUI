@@ -45,6 +45,10 @@ public abstract class Componentable {
 	public Player getPlayer() {
 		return p;
 	}
+	
+	public void reset() {
+		this.components = new ArrayList<UIComponent>();
+	}
 
 	public abstract Inventory getInventory();
 

@@ -28,7 +28,6 @@ public abstract class SpigotUI extends Componentable {
 		super(p, 9);
 		this.p = p;
 		this.activeInventory = new SizedActiveInventory(this, size);
-		initComponents();
 	}
 
 	public SpigotUI(Player p, String name) {
@@ -36,14 +35,12 @@ public abstract class SpigotUI extends Componentable {
 		this.p = p;
 		this.name = name;
 		this.activeInventory = new SizedActiveInventory(this, size);
-		initComponents();
 	}
 
 	public SpigotUI(Player p, ActiveInventory acInv) {
 		super(p, 9);
 		this.p = p;
 		setActiveInventory(acInv);
-		initComponents();
 	}
 
 	public SpigotUI(Player p, ActiveInventory acInv, String name) {
@@ -51,7 +48,6 @@ public abstract class SpigotUI extends Componentable {
 		this.p = p;
 		this.name = name;
 		setActiveInventory(acInv);
-		initComponents();
 	}
 
 	public void setActiveInventory(ActiveInventory activeInventory) {
@@ -133,6 +129,8 @@ public abstract class SpigotUI extends Componentable {
 	}
 
 	public void openInventory() {
+		this.reset();
+		initComponents();
 		UIHandler.saveItemCache(p);
 		activeInventory.openInventory();
 		super.repaint();
