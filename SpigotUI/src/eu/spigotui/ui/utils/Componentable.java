@@ -11,8 +11,6 @@ import eu.spigotui.ui.UIComponent;
 
 public abstract class Componentable {
 
-//	TreeMap<UIComponent, Point> components = new TreeMap<UIComponent, Point>();
-//	List<Entry<UIComponent, Point>> components = new ArrayList<>();
 	private ArrayList<UIComponent> components = new ArrayList<>();
 
 	Player p;
@@ -46,6 +44,10 @@ public abstract class Componentable {
 		return p;
 	}
 
+	public void reset() {
+		this.components = new ArrayList<UIComponent>();
+	}
+
 	public abstract Inventory getInventory();
 
 	public List<UIComponent> getComponents() {
@@ -71,12 +73,13 @@ public abstract class Componentable {
 						slot = (slot + 9) % 36;
 					}
 
-					sectionInv.setItem(slot, c.getStack(x, y));
+					if (sectionInv.getSize() > slot)
+						sectionInv.setItem(slot, c.getStack(x, y));
 				}
 			}
 		});
 	}
-	
+
 	public void sortLayers() {
 		components.sort((e1, e2) -> e1.getZ() - e2.getZ());
 	}

@@ -1,7 +1,5 @@
 package eu.spigotui.ui.active;
 
-import java.awt.Point;
-
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -42,7 +40,8 @@ public class TextFieldInventory extends AnvilInventory {
 	}
 	
 	public boolean valueChanged() {
-		return !defValue.equals(lastValue);
+		if(lastValue==null) return false;
+		return !defValue.trim().equals(lastValue.trim());
 	}
 
 	public void displayError(String message) {

@@ -20,12 +20,13 @@ public class ItemBuilder {
 	int itemCount = 1;
 
 	HashMap<Enchantment, Integer> enchants = new HashMap<>();
-	private ItemBuilder() { }
+
+	private ItemBuilder() {
+	}
 
 	public ItemBuilder(Material material) {
 		this.material = material;
 	}
-
 
 	public ItemBuilder setItemCount(int count) {
 		this.itemCount = count;
@@ -41,6 +42,11 @@ public class ItemBuilder {
 
 	public ItemBuilder setDamage(int damage) {
 		this.damage = damage;
+		return this;
+	}
+	
+	public ItemBuilder setColor(BlockColor color) {
+		this.damage = color.code;
 		return this;
 	}
 
@@ -102,6 +108,18 @@ public class ItemBuilder {
 		meta.setDisplayName(name);
 		pane.setItemMeta(meta);
 		return pane;
+	}
+
+	public static enum BlockColor {
+		WHITE(0), ORANGE(1), MAGENTA(2), LIGHT_BLUE(3),
+		YELLOW(4), GREEN(5), PINK(6), GRAY(7), LIGHT_GRAY(8), CYAN(9),
+		PURPLE(10), BLUE(11), BROWN(12), DARK_GREEN(13), RED(14), BLACK(15);
+
+		int code;
+
+		BlockColor(int code) {
+			this.code = code;
+		}
 	}
 
 }
