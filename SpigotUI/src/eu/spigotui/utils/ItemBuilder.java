@@ -118,9 +118,9 @@ public class ItemBuilder {
 
 	public static enum BlockColor {
 		WHITE(0, ChatColor.WHITE), ORANGE(1, ChatColor.GOLD), MAGENTA(2, ChatColor.LIGHT_PURPLE),
-		LIGHT_BLUE(3, ChatColor.BLUE), YELLOW(4, ChatColor.YELLOW), GREEN(5, ChatColor.GREEN), PINK(6, ChatColor.MAGIC),
+		LIGHT_BLUE(3, ChatColor.DARK_AQUA), YELLOW(4, ChatColor.YELLOW), GREEN(5, ChatColor.GREEN), PINK(6, ChatColor.MAGIC),
 		GRAY(7, ChatColor.DARK_GRAY), LIGHT_GRAY(8, ChatColor.GRAY), CYAN(9, ChatColor.AQUA),
-		PURPLE(10, ChatColor.DARK_PURPLE), BLUE(11, ChatColor.DARK_BLUE), BROWN(12, ChatColor.GOLD),
+		PURPLE(10, ChatColor.DARK_PURPLE), BLUE(11, ChatColor.BLUE), BROWN(12, ChatColor.GOLD),
 		DARK_GREEN(13, ChatColor.DARK_GREEN), RED(14, ChatColor.RED), BLACK(15, ChatColor.BLACK);
 
 		int code;
