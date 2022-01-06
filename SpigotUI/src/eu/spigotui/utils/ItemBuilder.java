@@ -6,6 +6,7 @@ import java.util.HashMap;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -18,6 +19,7 @@ public class ItemBuilder {
 	String[] lore;
 	String owner;
 	int itemCount = 1;
+	boolean hideEnchantment = false;
 
 	HashMap<Enchantment, Integer> enchants = new HashMap<>();
 
@@ -67,6 +69,12 @@ public class ItemBuilder {
 
 	public ItemBuilder enchantEffect() {
 		enchants.put(Enchantment.DAMAGE_ALL, -1);
+		hideEnchantment = true;
+		return this;
+	}
+	
+	public ItemBuilder hideEnchantments(boolean b) {
+		this.hideEnchantment = b;
 		return this;
 	}
 
@@ -85,6 +93,7 @@ public class ItemBuilder {
 				meta.addEnchant(ench, level, true);
 			}
 		}
+		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		if (name != null)
 			meta.setDisplayName(name);
 		if (damage != null)

@@ -2,6 +2,8 @@ package eu.spigotui.ui;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -19,7 +21,7 @@ import eu.spigotui.utils.ItemBuilder;
 import eu.spigotui.utils.UISection;
 
 public abstract class SpigotUI extends Componentable {
-	
+
 	public static HashMap<ItemStack, ItemClickAction> clickEvents = new HashMap<>();
 
 	public static final int size = 3;
@@ -73,9 +75,9 @@ public abstract class SpigotUI extends Componentable {
 			this.addComponent(comp);
 		}
 	}
-	
+
 	public void paintBackground(UISection section) {
-		UIComponent background = new UIDisplayComponent(ItemBuilder.paneFiller(7, "�8-"),100,100).setPos(0, 0, -100);
+		UIComponent background = new UIDisplayComponent(ItemBuilder.paneFiller(7, "�8-"), 100, 100).setPos(0, 0, -100);
 		this.addComponent(section, background);
 	}
 
@@ -101,8 +103,8 @@ public abstract class SpigotUI extends Componentable {
 		}
 
 		List<UIComponent> map = section == UISection.BOTTOM ? getComponents() : activeInventory.getComponents();
-
-		// List<UIComponent> keys = new ArrayList<>(map.keySet());
+		map = new ArrayList<UIComponent>(map);
+		Collections.reverse(map);
 
 		for (UIComponent key : map) {
 			Point location = key.getPos();
@@ -110,6 +112,7 @@ public abstract class SpigotUI extends Componentable {
 			boolean hit = location.x >= absX && location.x < absX + size.width && location.y >= absY
 					&& location.y < absY + size.height;
 			if (hit) {
+				System.out.println(key);
 				return key.onClick(absX - location.x, absY - location.y, action);
 			}
 		}
@@ -161,17 +164,17 @@ public abstract class SpigotUI extends Componentable {
 	public void repaintBottom() {
 		super.repaint();
 	}
-	
+
 	public abstract void initComponents();
-	
+
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-	
+
 	/*
 	 * STATIC
 	 */
