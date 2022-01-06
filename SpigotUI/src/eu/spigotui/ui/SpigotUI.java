@@ -2,20 +2,25 @@ package eu.spigotui.ui;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import eu.spigotui.ui.active.SizedActiveInventory;
 import eu.spigotui.ui.active.categories.ActiveInventory;
 import eu.spigotui.ui.components.UIDisplayComponent;
 import eu.spigotui.ui.utils.ClickAction;
 import eu.spigotui.ui.utils.Componentable;
+import eu.spigotui.ui.utils.ItemClickAction;
 import eu.spigotui.utils.ItemBuilder;
 import eu.spigotui.utils.UISection;
 
 public abstract class SpigotUI extends Componentable {
+	
+	public static HashMap<ItemStack, ItemClickAction> clickEvents = new HashMap<>();
 
 	public static final int size = 3;
 
@@ -70,7 +75,7 @@ public abstract class SpigotUI extends Componentable {
 	}
 	
 	public void paintBackground(UISection section) {
-		UIComponent background = new UIDisplayComponent(ItemBuilder.paneFiller(7, "§8-"),100,100).setPos(0, 0, -100);
+		UIComponent background = new UIDisplayComponent(ItemBuilder.paneFiller(7, "ï¿½8-"),100,100).setPos(0, 0, -100);
 		this.addComponent(section, background);
 	}
 
@@ -166,5 +171,12 @@ public abstract class SpigotUI extends Componentable {
 	public String getName() {
 		return name;
 	}
+	
+	/*
+	 * STATIC
+	 */
 
+	public static void addClickListener(ItemStack stack, ItemClickAction action) {
+		clickEvents.put(stack, action);
+	}
 }
