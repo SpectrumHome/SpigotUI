@@ -3,6 +3,7 @@ package eu.spigotui.utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
 import org.bukkit.enchantments.Enchantment;
@@ -46,9 +47,14 @@ public class ItemBuilder {
 		this.damage = damage;
 		return this;
 	}
-	
+
 	public ItemBuilder setColor(BlockColor color) {
 		this.damage = color.code;
+		return this;
+	}
+	
+	public ItemBuilder setColor(ChatColor color) {
+		this.damage = BlockColor.getByColor(color).code;
 		return this;
 	}
 
@@ -120,14 +126,25 @@ public class ItemBuilder {
 	}
 
 	public static enum BlockColor {
-		WHITE(0), ORANGE(1), MAGENTA(2), LIGHT_BLUE(3),
-		YELLOW(4), GREEN(5), PINK(6), GRAY(7), LIGHT_GRAY(8), CYAN(9),
-		PURPLE(10), BLUE(11), BROWN(12), DARK_GREEN(13), RED(14), BLACK(15);
+		WHITE(0, ChatColor.WHITE), ORANGE(1, ChatColor.GOLD), MAGENTA(2, ChatColor.LIGHT_PURPLE),
+		LIGHT_BLUE(3, ChatColor.BLUE), YELLOW(4, ChatColor.YELLOW), GREEN(5, ChatColor.GREEN), PINK(6, ChatColor.MAGIC),
+		GRAY(7, ChatColor.DARK_GRAY), LIGHT_GRAY(8, ChatColor.GRAY), CYAN(9, ChatColor.AQUA),
+		PURPLE(10, ChatColor.DARK_PURPLE), BLUE(11, ChatColor.DARK_BLUE), BROWN(12, ChatColor.GOLD),
+		DARK_GREEN(13, ChatColor.DARK_GREEN), RED(14, ChatColor.RED), BLACK(15, ChatColor.BLACK);
 
 		int code;
+		ChatColor color;
+		
+		public static BlockColor getByColor(ChatColor color) {
+			for(BlockColor c : BlockColor.values()) {
+				if(c.color==color) return c;
+			}
+			return null;
+		}
 
-		BlockColor(int code) {
+		BlockColor(int code, ChatColor color) {
 			this.code = code;
+			this.color = color;
 		}
 	}
 
