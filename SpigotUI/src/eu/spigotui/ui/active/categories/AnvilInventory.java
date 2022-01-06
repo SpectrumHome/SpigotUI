@@ -19,7 +19,7 @@ public abstract class AnvilInventory extends ActiveInventory {
 		int containerId = entityPlayer.nextContainerCounter();
 
 		((CraftPlayer) getPlayer()).getHandle().playerConnection.sendPacket(
-				new PacketPlayOutOpenWindow(containerId, "minecraft:anvil", new ChatMessage("", new Object[] {}), 0));
+				new PacketPlayOutOpenWindow(containerId, "minecraft:anvil", new ChatMessage(getName(), new Object[] {}), 0));
 
 		entityPlayer.activeContainer = fakeAnvil;
 		entityPlayer.activeContainer.windowId = containerId;

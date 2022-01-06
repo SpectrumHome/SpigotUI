@@ -8,7 +8,6 @@ import eu.spigotui.ui.utils.Componentable;
 public abstract class ActiveInventory extends Componentable {
 
 	SpigotUI ui;
-
 	Inventory inv;
 	
 	public ActiveInventory() {}
@@ -46,6 +45,11 @@ public abstract class ActiveInventory extends Componentable {
 
 	/* also open inventory NOT ONLY RETURN */
 	public abstract Inventory openActiveInventory();
+	
+	public String getName() {
+		if(ui.getName()==null) return "GUI";
+		else return ui.getName();
+	}
 
 
 }

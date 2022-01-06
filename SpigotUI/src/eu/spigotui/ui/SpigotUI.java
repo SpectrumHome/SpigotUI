@@ -9,8 +9,10 @@ import org.bukkit.inventory.Inventory;
 
 import eu.spigotui.ui.active.SizedActiveInventory;
 import eu.spigotui.ui.active.categories.ActiveInventory;
+import eu.spigotui.ui.components.UIDisplayComponent;
 import eu.spigotui.ui.utils.ClickAction;
 import eu.spigotui.ui.utils.Componentable;
+import eu.spigotui.utils.ItemBuilder;
 import eu.spigotui.utils.UISection;
 
 public abstract class SpigotUI extends Componentable {
@@ -27,14 +29,14 @@ public abstract class SpigotUI extends Componentable {
 	public SpigotUI(Player p) {
 		super(p, 9);
 		this.p = p;
-		this.activeInventory = new SizedActiveInventory(this, size);
+		setActiveInventory(new SizedActiveInventory(size));
 	}
 
 	public SpigotUI(Player p, String name) {
 		super(p, 9);
 		this.p = p;
 		this.name = name;
-		this.activeInventory = new SizedActiveInventory(this, size);
+		setActiveInventory(new SizedActiveInventory(size));
 	}
 
 	public SpigotUI(Player p, ActiveInventory acInv) {
@@ -65,6 +67,11 @@ public abstract class SpigotUI extends Componentable {
 		} else {
 			this.addComponent(comp);
 		}
+	}
+	
+	public void paintBackground(UISection section) {
+		UIComponent background = new UIDisplayComponent(ItemBuilder.paneFiller(7, "§8-"),100,100).setPos(0, 0, -100);
+		this.addComponent(section, background);
 	}
 
 	public boolean removeComponent(UIComponent comp) {
@@ -151,5 +158,13 @@ public abstract class SpigotUI extends Componentable {
 	}
 	
 	public abstract void initComponents();
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public String getName() {
+		return name;
+	}
 
 }
