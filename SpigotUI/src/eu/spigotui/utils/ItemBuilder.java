@@ -141,6 +141,10 @@ public class ItemBuilder {
 			}
 			return null;
 		}
+		
+		public int getCode() {
+			return code;
+		}
 
 		BlockColor(int code, ChatColor color) {
 			this.code = code;

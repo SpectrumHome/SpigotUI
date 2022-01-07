@@ -59,26 +59,29 @@ public abstract class SpigotUI extends Componentable {
 		setActiveInventory(acInv);
 	}
 
-	public void setActiveInventory(ActiveInventory activeInventory) {
+	public SpigotUI setActiveInventory(ActiveInventory activeInventory) {
 		activeInventory.setUi(this);
 		this.activeInventory = activeInventory;
+		return this;
 	}
 
 	public Player getPlayer() {
 		return p;
 	}
 
-	public void addComponent(UISection section, UIComponent comp) {
+	public SpigotUI addComponent(UISection section, UIComponent comp) {
 		if (section == UISection.TOP) {
 			this.activeInventory.addComponent(comp);
 		} else {
 			this.addComponent(comp);
 		}
+		return this;
 	}
 
-	public void paintBackground(UISection section) {
+	public SpigotUI paintBackground(UISection section) {
 		UIComponent background = new UIDisplayComponent(ItemBuilder.paneFiller(7, "�8-"), 100, 100).setPos(0, 0, -100);
 		this.addComponent(section, background);
+		return this;
 	}
 
 	public boolean removeComponent(UIComponent comp) {
@@ -109,10 +112,11 @@ public abstract class SpigotUI extends Componentable {
 		for (UIComponent key : map) {
 			Point location = key.getPos();
 			Dimension size = key.getSize();
-			boolean hit = location.x >= absX && location.x < absX + size.width && location.y >= absY
-					&& location.y < absY + size.height;
+			boolean b1 = absX >= location.x, b2 = absX < location.x + size.width;
+			boolean b3 = absY >= location.y, b4 = absY < location.y + size.height;
+			boolean hit = b1 && b2 && b3
+					&& b4;
 			if (hit) {
-				System.out.println(key);
 				return key.onClick(absX - location.x, absY - location.y, action);
 			}
 		}
@@ -132,21 +136,29 @@ public abstract class SpigotUI extends Componentable {
 		p.closeInventory();
 	}
 
-	public void onClose() {
-		UIListener.currentUIs.remove(this);
+	public void onClose(boolean transition) {
+		if (UIListener.currentUIs.contains(this))
+			UIListener.currentUIs.remove(this);
 		if (onClose != null)
 			onClose.run();
-		UIHandler.loadItemCache(p);
+		if (!transition)
+			UIHandler.loadItemCache(p);
 	}
 
-	public void setActionOnClose(Runnable run) {
+	public SpigotUI setActionOnClose(Runnable run) {
 		this.onClose = run;
+		return this;
 	}
 
 	public void openInventory() {
+		SpigotUI ui = UIListener.getUIByPlayer(p);
 		this.reset();
+		if (ui != null) {
+			ui.onClose(true);
+		} else {
+			UIHandler.saveItemCache(p);
+		}
 		initComponents();
-		UIHandler.saveItemCache(p);
 		activeInventory.openInventory();
 		super.repaint();
 		UIListener.currentUIs.add(this);

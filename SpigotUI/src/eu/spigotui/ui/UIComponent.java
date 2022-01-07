@@ -56,6 +56,7 @@ public abstract class UIComponent extends BoundingBox{
 			parent.sortLayers();
 	}
 	
+	
 	public abstract boolean onClick(int relX, int relY, ClickAction type);
 
 	public abstract ItemStack getStack(int relX, int relY);
