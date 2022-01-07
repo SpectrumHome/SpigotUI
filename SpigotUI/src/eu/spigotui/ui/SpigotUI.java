@@ -59,26 +59,29 @@ public abstract class SpigotUI extends Componentable {
 		setActiveInventory(acInv);
 	}
 
-	public void setActiveInventory(ActiveInventory activeInventory) {
+	public SpigotUI setActiveInventory(ActiveInventory activeInventory) {
 		activeInventory.setUi(this);
 		this.activeInventory = activeInventory;
-	}
+		return this;
+		}
 
 	public Player getPlayer() {
 		return p;
 	}
 
-	public void addComponent(UISection section, UIComponent comp) {
+	public SpigotUI addComponent(UISection section, UIComponent comp) {
 		if (section == UISection.TOP) {
 			this.activeInventory.addComponent(comp);
 		} else {
 			this.addComponent(comp);
 		}
+		return this;
 	}
 
-	public void paintBackground(UISection section) {
+	public SpigotUI paintBackground(UISection section) {
 		UIComponent background = new UIDisplayComponent(ItemBuilder.paneFiller(7, "�8-"), 100, 100).setPos(0, 0, -100);
 		this.addComponent(section, background);
+		return this;
 	}
 
 	public boolean removeComponent(UIComponent comp) {
@@ -139,8 +142,9 @@ public abstract class SpigotUI extends Componentable {
 		UIHandler.loadItemCache(p);
 	}
 
-	public void setActionOnClose(Runnable run) {
+	public SpigotUI setActionOnClose(Runnable run) {
 		this.onClose = run;
+		return this;
 	}
 
 	public void openInventory() {
