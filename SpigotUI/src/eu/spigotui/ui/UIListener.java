@@ -22,8 +22,7 @@ public class UIListener implements Listener {
 		HumanEntity p = e.getPlayer();
 		SpigotUI ui;
 		if ((ui = getUIByPlayer(p)) != null)
-			ui.onClose();
-
+			ui.onClose(false);
 	}
 
 	@EventHandler

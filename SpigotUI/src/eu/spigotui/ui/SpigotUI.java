@@ -63,7 +63,7 @@ public abstract class SpigotUI extends Componentable {
 		activeInventory.setUi(this);
 		this.activeInventory = activeInventory;
 		return this;
-		}
+	}
 
 	public Player getPlayer() {
 		return p;
@@ -112,10 +112,11 @@ public abstract class SpigotUI extends Componentable {
 		for (UIComponent key : map) {
 			Point location = key.getPos();
 			Dimension size = key.getSize();
-			boolean hit = location.x >= absX && location.x < absX + size.width && location.y >= absY
-					&& location.y < absY + size.height;
+			boolean b1 = absX >= location.x, b2 = absX < location.x + size.width;
+			boolean b3 = absY >= location.y, b4 = absY < location.y + size.height;
+			boolean hit = b1 && b2 && b3
+					&& b4;
 			if (hit) {
-				System.out.println(key);
 				return key.onClick(absX - location.x, absY - location.y, action);
 			}
 		}
@@ -135,11 +136,13 @@ public abstract class SpigotUI extends Componentable {
 		p.closeInventory();
 	}
 
-	public void onClose() {
-		UIListener.currentUIs.remove(this);
+	public void onClose(boolean transition) {
+		if (UIListener.currentUIs.contains(this))
+			UIListener.currentUIs.remove(this);
 		if (onClose != null)
 			onClose.run();
-		UIHandler.loadItemCache(p);
+		if (!transition)
+			UIHandler.loadItemCache(p);
 	}
 
 	public SpigotUI setActionOnClose(Runnable run) {
@@ -148,9 +151,14 @@ public abstract class SpigotUI extends Componentable {
 	}
 
 	public void openInventory() {
+		SpigotUI ui = UIListener.getUIByPlayer(p);
 		this.reset();
+		if (ui != null) {
+			ui.onClose(true);
+		} else {
+			UIHandler.saveItemCache(p);
+		}
 		initComponents();
-		UIHandler.saveItemCache(p);
 		activeInventory.openInventory();
 		super.repaint();
 		UIListener.currentUIs.add(this);

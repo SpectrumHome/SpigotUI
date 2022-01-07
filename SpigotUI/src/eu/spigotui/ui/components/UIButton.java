@@ -22,8 +22,8 @@ public class UIButton extends UIComponent {
 		super(new Dimension(width, height));
 		this.stack = stack;
 	}
-	
-	public UIButton(ItemStack stack,ValueRunnable<ClickAction> onClick) {
+
+	public UIButton(ItemStack stack, ValueRunnable<ClickAction> onClick) {
 		this.stack = stack;
 		this.onClick = onClick;
 	}
@@ -39,7 +39,7 @@ public class UIButton extends UIComponent {
 		if (this.onClick != null)
 			onClick.run(type);
 		return true;
-		
+
 	}
 
 	@Override
