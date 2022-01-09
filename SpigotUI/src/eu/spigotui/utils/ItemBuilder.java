@@ -52,7 +52,7 @@ public class ItemBuilder {
 		this.damage = color.code;
 		return this;
 	}
-	
+
 	public ItemBuilder setColor(ChatColor color) {
 		this.damage = BlockColor.getByColor(color).code;
 		return this;
@@ -78,7 +78,7 @@ public class ItemBuilder {
 		hideEnchantment = true;
 		return this;
 	}
-	
+
 	public ItemBuilder hideEnchantments(boolean b) {
 		this.hideEnchantment = b;
 		return this;
@@ -127,21 +127,22 @@ public class ItemBuilder {
 
 	public static enum BlockColor {
 		WHITE(0, ChatColor.WHITE), ORANGE(1, ChatColor.GOLD), MAGENTA(2, ChatColor.LIGHT_PURPLE),
-		LIGHT_BLUE(3, ChatColor.DARK_AQUA), YELLOW(4, ChatColor.YELLOW), GREEN(5, ChatColor.GREEN), PINK(6, ChatColor.MAGIC),
-		GRAY(7, ChatColor.DARK_GRAY), LIGHT_GRAY(8, ChatColor.GRAY), CYAN(9, ChatColor.AQUA),
+		LIGHT_BLUE(3, ChatColor.DARK_AQUA), YELLOW(4, ChatColor.YELLOW), GREEN(5, ChatColor.GREEN),
+		PINK(6, ChatColor.MAGIC), GRAY(7, ChatColor.DARK_GRAY), LIGHT_GRAY(8, ChatColor.GRAY), CYAN(9, ChatColor.AQUA),
 		PURPLE(10, ChatColor.DARK_PURPLE), BLUE(11, ChatColor.BLUE), BROWN(12, ChatColor.GOLD),
 		DARK_GREEN(13, ChatColor.DARK_GREEN), RED(14, ChatColor.RED), BLACK(15, ChatColor.BLACK);
 
 		int code;
 		ChatColor color;
-		
+
 		public static BlockColor getByColor(ChatColor color) {
-			for(BlockColor c : BlockColor.values()) {
-				if(c.color==color) return c;
+			for (BlockColor c : BlockColor.values()) {
+				if (c.color == color)
+					return c;
 			}
 			return null;
 		}
-		
+
 		public int getCode() {
 			return code;
 		}
@@ -150,6 +151,22 @@ public class ItemBuilder {
 			this.code = code;
 			this.color = color;
 		}
+	}
+
+	public static boolean equals(ItemStack s1, ItemStack s2) {
+		if (s1 == null || s2 == null)
+			return s1 == null && s2 == null;
+		ItemMeta m1 = s1.getItemMeta();
+		ItemMeta m2 = s2.getItemMeta();
+
+		if (m1 instanceof SkullMeta && m2 instanceof SkullMeta) {
+			SkullMeta su1 = (SkullMeta) m1;
+			SkullMeta su2 = (SkullMeta) m2;
+			if(su1.getOwner().equalsIgnoreCase(su2.getOwner()))
+				return true;
+		}
+
+		return s1.equals(s2);
 	}
 
 }
