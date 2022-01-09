@@ -4,10 +4,13 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import eu.spigotui.ui.UIComponent;
+import eu.spigotui.utils.ItemBuilder;
 
 public abstract class Componentable {
 
@@ -55,12 +58,16 @@ public abstract class Componentable {
 	}
 
 	public void repaint() {
-		getInventory().clear();
 		setSectionItems(getInventory(), this.repaintOffset);
 		getPlayer().updateInventory();
 	}
 
 	public void setSectionItems(Inventory sectionInv, int offset) {
+
+		int size = sectionInv.getSize();
+
+		ItemStack[] items = new ItemStack[size];
+
 		components.forEach((c) -> {
 
 			for (int x = 0; x < c.getSize().width; x++) {
@@ -73,20 +80,40 @@ public abstract class Componentable {
 						slot = (slot + 9) % 36;
 					}
 
-					if (sectionInv.getSize() > slot)
-						sectionInv.setItem(slot, c.getStack(x, y));
+					if (size > slot) {
+						items[slot] = c.getStack(x, y);
+					}
 				}
 			}
 		});
+
+		for (int i = 0; i < size; i++) {
+			ItemStack prev = sectionInv.getItem(i);
+			ItemStack cur = items[i];
+			if (cur == null) {
+				sectionInv.setItem(i, new ItemStack(Material.AIR));
+			} else if (!ItemBuilder.equals(prev, cur)) {
+				sectionInv.setItem(i, cur);
+			}
+		}
 	}
 
 	public void sortLayers() {
 		components.sort((e1, e2) -> e1.getZ() - e2.getZ());
 	}
 
-	public UIComponent getComponentAt(Point position) {
+	public UIComponent getComponentAtOrigin(Point position) {
 		for (UIComponent comp : components) {
 			if (comp.getPos().equals(position))
+				return comp;
+		}
+		return null;
+	}
+
+	public UIComponent getComponentAt(int absX, int absY) {
+		for (int i = components.size() - 1; i >= 0; i--) {
+			UIComponent comp = components.get(i);
+			if (comp.hit(absX, absY))
 				return comp;
 		}
 		return null;

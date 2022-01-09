@@ -111,11 +111,7 @@ public abstract class SpigotUI extends Componentable {
 
 		for (UIComponent key : map) {
 			Point location = key.getPos();
-			Dimension size = key.getSize();
-			boolean b1 = absX >= location.x, b2 = absX < location.x + size.width;
-			boolean b3 = absY >= location.y, b4 = absY < location.y + size.height;
-			boolean hit = b1 && b2 && b3
-					&& b4;
+			boolean hit = key.hit(absX, absY);
 			if (hit) {
 				return key.onClick(absX - location.x, absY - location.y, action);
 			}
