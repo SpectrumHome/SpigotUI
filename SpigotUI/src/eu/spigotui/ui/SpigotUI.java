@@ -1,6 +1,5 @@
 package eu.spigotui.ui;
 
-import java.awt.Dimension;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,6 +31,8 @@ public abstract class SpigotUI extends Componentable {
 
 	Player p;
 	String name;
+
+	boolean keepInv = false;
 
 	public SpigotUI(Player p) {
 		super(p, 9);
@@ -65,6 +66,11 @@ public abstract class SpigotUI extends Componentable {
 		return this;
 	}
 
+	public SpigotUI setKeepInv(boolean keepInv) {
+		this.keepInv = keepInv;
+		return this;
+	}
+
 	public Player getPlayer() {
 		return p;
 	}
@@ -90,11 +96,13 @@ public abstract class SpigotUI extends Componentable {
 
 	// TODO: replaceComponent
 
-	public boolean onClicked(int rawX, int rawY, UISection section, ClickAction action) {
+	public boolean onClicked(int rawX, int rawY, UISection section, ClickAction action, ItemStack current) {
 
 		int absX = rawX;
 		int absY = rawY;
 		int slot = rawX + rawY * 9;
+
+		boolean rawClickReturn = true;
 
 		if (section == UISection.BOTTOM) {
 			slot -= 9;
@@ -103,6 +111,12 @@ public abstract class SpigotUI extends Componentable {
 
 			absX = slot % 9;
 			absY = (int) Math.floor(slot / 9);
+
+			if (this.onRawClick != null)
+				rawClickReturn = this.onRawClick.run(current, slot);
+		} else {
+			if (activeInventory.onRawClick != null)
+				rawClickReturn = activeInventory.onRawClick.run(current, slot);
 		}
 
 		List<UIComponent> map = section == UISection.BOTTOM ? getComponents() : activeInventory.getComponents();
@@ -117,7 +131,7 @@ public abstract class SpigotUI extends Componentable {
 			}
 		}
 
-		return true;
+		return rawClickReturn;
 	}
 
 	/* Only bottom inventory */
@@ -132,13 +146,15 @@ public abstract class SpigotUI extends Componentable {
 		p.closeInventory();
 	}
 
-	public void onClose(boolean transition) {
+	public void onClose(SpigotUI next) {
+		boolean transition = next != null;
 		if (UIListener.currentUIs.contains(this))
 			UIListener.currentUIs.remove(this);
 		if (onClose != null)
 			onClose.run();
-		if (!transition)
+		if ((!transition || next.keepInv) && !keepInv) {
 			UIHandler.loadItemCache(p);
+		}
 	}
 
 	public SpigotUI setActionOnClose(Runnable run) {
@@ -147,22 +163,25 @@ public abstract class SpigotUI extends Componentable {
 	}
 
 	public void openInventory() {
+		initComponents();
 		SpigotUI ui = UIListener.getUIByPlayer(p);
 		this.reset();
 		if (ui != null) {
-			ui.onClose(true);
-		} else {
+			ui.onClose(ui);
+		} 
+		if (!keepInv && (ui == null || ui.keepInv)) {
 			UIHandler.saveItemCache(p);
 		}
-		initComponents();
 		activeInventory.openInventory();
-		super.repaint();
+		if (!keepInv)
+			super.repaint();
 		UIListener.currentUIs.add(this);
 	}
 
 	public void repaint() {
 		activeInventory.repaint();
-		super.repaint();
+		if (!keepInv)
+			super.repaint();
 	}
 
 	public void repaintTop() {
@@ -170,7 +189,12 @@ public abstract class SpigotUI extends Componentable {
 	}
 
 	public void repaintBottom() {
-		super.repaint();
+		if (!keepInv)
+			super.repaint();
+	}
+
+	public ActiveInventory getActiveInventory() {
+		return activeInventory;
 	}
 
 	public abstract void initComponents();

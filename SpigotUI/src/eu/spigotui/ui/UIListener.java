@@ -22,7 +22,7 @@ public class UIListener implements Listener {
 		HumanEntity p = e.getPlayer();
 		SpigotUI ui;
 		if ((ui = getUIByPlayer(p)) != null)
-			ui.onClose(false);
+			ui.onClose(null);
 	}
 
 	@EventHandler
@@ -33,7 +33,8 @@ public class UIListener implements Listener {
 			UISection section = e.getClickedInventory() == ui.getInventory() ? UISection.BOTTOM : UISection.TOP;
 			int slot = e.getSlot();
 			e.setCancelled(ui.onClicked(slot % 9, (int) Math.floor(slot / 9), section,
-					ClickAction.getFromStates(e.isLeftClick(), e.isRightClick(), e.isShiftClick())));
+					ClickAction.getFromStates(e.isLeftClick(), e.isRightClick(), e.isShiftClick()),
+					e.getCurrentItem()));
 		}
 	}
 

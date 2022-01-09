@@ -15,7 +15,9 @@ import eu.spigotui.utils.ItemBuilder;
 public abstract class Componentable {
 
 	private ArrayList<UIComponent> components = new ArrayList<>();
-
+	
+	public RawItemClickRunnable onRawClick;
+	
 	Player p;
 	int repaintOffset = -1;
 
@@ -60,6 +62,21 @@ public abstract class Componentable {
 	public void repaint() {
 		setSectionItems(getInventory(), this.repaintOffset);
 		getPlayer().updateInventory();
+	}
+	
+	public void setOnRawClick(RawItemClickRunnable onRawClick) {
+		this.onRawClick = onRawClick;
+	}
+	
+	public ItemStack getItem(int slot) {
+		Inventory inv = getInventory();
+		
+		if(inv.getSize() > slot)
+			return null;
+		ItemStack stack = getInventory().getItem(slot);
+		if(stack == null || stack.getType() == Material.AIR)
+			return null;
+		return stack;
 	}
 
 	public void setSectionItems(Inventory sectionInv, int offset) {
@@ -124,6 +141,10 @@ public abstract class Componentable {
 		comp.setParent(this);
 		sortLayers();
 	}
+	
+	public void clearComponents() {
+		components.clear();
+	}
 
 //	@Deprecated
 //	public void insertComponent(int listPos, Point pos, UIComponent comp) {
@@ -133,6 +154,10 @@ public abstract class Componentable {
 	public boolean removeComponent(UIComponent comp) {
 		comp.setParent(null);
 		return components.remove(comp);
+	}
+	
+	public static interface RawItemClickRunnable {
+		public boolean run(ItemStack item, int slot);
 	}
 
 }
